@@ -6,7 +6,7 @@ var roleHarvester = {
             creep.say('🔄');
 	    }
 	    if(!creep.memory.transferring && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.transferring = true;
+            creep.memory.transferring = true;
 	        creep.say('⚡');
 	    }
 
@@ -14,7 +14,7 @@ var roleHarvester = {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
             if(targets.length > 0) {
@@ -23,7 +23,7 @@ var roleHarvester = {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffff66'}});
                 }
             } else {
-                creep.moveTo(Game.spawns['Spawn1']);
+                creep.moveTo(14, 10);
             }
         }
         else {
@@ -43,14 +43,14 @@ var roleHarvester = {
             creep.say('🔄');
 	    }
 	    if(!creep.memory.transferring && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.transferring = true;
+            creep.memory.transferring = true;
 	        creep.say('⚡');
 	    }
-
+        
 	    if(creep.memory.transferring) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == 'container') &&
+                    return (structure.structureType == STRUCTURE_CONTAINER) &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });

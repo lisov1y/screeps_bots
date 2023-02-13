@@ -1,6 +1,6 @@
 var constructionTower = {
 
-    run: function(id, currentCapacity) {
+    run: function(id, currentCapacity, isEnoughCreeps) {
         var tower = Game.getObjectById(id);
         if(tower) {
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -8,9 +8,9 @@ var constructionTower = {
                 tower.attack(closestHostile);
             } 
             else {
-                if (currentCapacity >= 1000) {
+                if (currentCapacity >= 1000 && isEnoughCreeps) {
                     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                        filter: (structure) => structure.hits < structure.hitsMax && (structure.structureType != STRUCTURE_WALL || structure.structureType != 'rampart')
+                        filter: (structure) => structure.hits < structure.hitsMax && (structure.structureType != STRUCTURE_RAMPART || structure.structureType != STRUCTURE_WALL)
                     });
                     if(!closestDamagedStructure) {
                         closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {

@@ -5,17 +5,25 @@ var roleHauler = {
             creep.say('⬇️');
 	    }
 	    if(!creep.memory.transferring && creep.store.getFreeCapacity() != creep.store.getCapacity()) {
-	        creep.memory.transferring = true;
+            creep.memory.transferring = true;
 	        creep.say('⚡');
 	    }
         
         if(creep.memory.transferring) {
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) &&
+                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
+            if (!targets.length) {
+                targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_TOWER) &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    }
+                });
+            }
             if(targets.length > 0) {
                 var target = creep.pos.findClosestByRange(targets);
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

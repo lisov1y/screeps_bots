@@ -48,8 +48,8 @@ module.exports.loop = function () {
         lastAvailableCapacity = Game.spawns['Spawn1'].room.energyAvailable;
     
     }
-    constructionTower.run('63e1b921f39ee14311937439', lastAvailableCapacity);
-    constructionTower.run('63e6c11e283dbe700711006b', lastAvailableCapacity);
+    constructionTower.run('63e1b921f39ee14311937439', lastAvailableCapacity, creepsAlive.haulers.length == 1);
+    constructionTower.run('63e6c11e283dbe700711006b', lastAvailableCapacity, creepsAlive.haulers.length == 1);
     
     // WORK - 100; MOVE - 50; CARRY - 50; ATTACK - 80; RANGED_ATTACK - 150; HEAL - 250
     
@@ -76,33 +76,33 @@ module.exports.loop = function () {
     if (lastMaxCapacity > 300) {
         currentUpgrader = roleUpgrader.builds.buffed;
     }
-
+    
     var currentRepairer = roleRepairer.builds.default;
     if (lastMaxCapacity > 300) {
         currentRepairer = roleRepairer.builds.buffed;
     }
-
+    
     var currentMeleeFighter = roleMeleeFighter.builds.default;
-
+    
     var currentClaimer = roleClaimer.builds.default;
 
     if (creepsAlive.harvesters.length < 2) {
         spawnCreep('harvester', currentHarvester);
     }
-    else if (creepsAlive.haulers.length < 2) {
+    else if (creepsAlive.haulers.length < 1) {
         spawnCreep('hauler', currentHauler);
     }
-    // else if (creepsAlive.claimers.length < 1) {
+        // else if (creepsAlive.claimers.length < 1) {
     //     spawnCreep('claimer', currentClaimer);
     // }
+    else if (Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length && creepsAlive.builders.length < 1) {
+        spawnCreep('builder', currentBuilder);
+    }
     else if (creepsAlive.upgraders.length < 2) {
         spawnCreep('upgrader', currentUpgrader);
     }
-    else if (creepsAlive.meleeFighters.length < 2) {
+    else if (creepsAlive.meleeFighters.length < 1) {
         spawnCreep('meleeFighter', currentMeleeFighter);
-    }
-    else if (Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length && creepsAlive.builders.length < 1) {
-        spawnCreep('builder', currentBuilder);
     }
     // else if (creepsAlive.repairers.length < 1) {
     //     spawnCreep('repairer', currentRepairer);
@@ -139,7 +139,7 @@ module.exports.loop = function () {
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if(creep.memory.role == 'harvester') {
-            if (creepsAlive.haulers.length < 1) {
+            if (creepsAlive.haulers.length == 0) {
                 roleHarvester.run(creep);
             } else {
                 roleHarvester.staticHarvester(creep);

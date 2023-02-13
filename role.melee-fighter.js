@@ -6,7 +6,7 @@ var meleeFighter = {
                 creep.moveTo(target);
             }
         } else {
-            creep.moveTo(20, 2);
+            creep.moveTo(22, 2);
         }
 	},
 
