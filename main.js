@@ -146,7 +146,7 @@ module.exports.loop = function () {
             }
         }
         if(creep.memory.role == 'hauler') {
-            roleHauler.run(creep);
+            roleHauler.run(creep, lastAvailableCapacity);
         }
         if(creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);

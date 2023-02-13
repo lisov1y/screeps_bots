@@ -1,5 +1,5 @@
 var roleHauler = {
-    run: function(creep) {
+    run: function(creep, energyAvailable) {
         if(creep.memory.transferring && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.transferring = false;
             creep.say('⬇️');
@@ -10,25 +10,31 @@ var roleHauler = {
 	    }
         
         if(creep.memory.transferring) {
-            var targets = creep.room.find(FIND_STRUCTURES, {
+            var extensions = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
+                    return (structure.structureType == STRUCTURE_EXTENSION) &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-            if (!targets.length) {
-                targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                    }
-                });
+            var towers = creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_TOWER) &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+            if (energyAvailable >= 1000 ) {
+                targets = towers;
+            } else {
+                targets = extensions;
             }
             if(targets.length > 0) {
                 var target = creep.pos.findClosestByRange(targets);
-                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target, {visualizePathStyle: {stroke: '#ffff66'}});
-                    }
+                } else {
+                    console.log(target)
+                    creep.transfer(target, RESOURCE_ENERGY);
+                }
             } else {
                 creep.moveTo(13, 15);
             }
