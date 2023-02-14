@@ -9,17 +9,27 @@ var constructionTower = {
             } 
             else {
                 if (currentCapacity >= 1000 && isEnoughCreeps) {
-                    var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                        filter: (structure) => structure.hits < structure.hitsMax && (structure.structureType != STRUCTURE_RAMPART || structure.structureType != STRUCTURE_WALL)
+                    var containers = tower.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_CONTAINER && structure.hits < structure.hitsMax);
+                        }
                     });
-                    if(!closestDamagedStructure) {
-                        closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                            filter: (structure) => (structure.structureType == STRUCTURE_WALL || structure.structureType == 'rampart')
-                        });
-            
-                    }
-                    if (closestDamagedStructure) {
-                        tower.repair(closestDamagedStructure);
+                    var defences = tower.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_WALL) && structure.hits < structure.hitsMax;
+                        }
+                    });
+                    var roads = tower.room.find(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_ROAD) && structure.hits < structure.hitsMax;
+                        }
+                    });
+                    if (containers.length) {
+                        tower.repair(tower.pos.findClosestByRange(containers))
+                    } else if (roads.length) {
+                        tower.repair(tower.pos.findClosestByRange(roads))
+                    } else {
+                        tower.repair(defences);
                     }
                 }
             }
